@@ -1,0 +1,35 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title>Elm Spreadsheet</title>
+        <style>
+            body {
+                margin: auto;
+                width: 80%;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            input, td {
+                width: 40px;
+                height: 30px;
+            }
+
+            input {
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script src="./js/index.js"></script>
+        <script>
+            Elm.Main.init({
+                node: document.getElementById("app")
+            })
+        </script>
+    </body>
+</html>
