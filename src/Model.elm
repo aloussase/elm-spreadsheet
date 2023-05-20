@@ -18,7 +18,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { cells = Dict.empty
-    , rows = 10
+    , rows = 15
     , cols = 20
     , currentCell = Nothing
     }

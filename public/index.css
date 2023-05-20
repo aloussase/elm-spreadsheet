@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+
+body {
+    font-family: 'Raleway', sans-serif;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+input, td {
+    width: 50px;
+    height: 25px;
+}
+
+input {
+    border: none;
+}
+
+footer {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    color: black;
+}
+
+#spreadsheet {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cell-error {
+    color: red;
+}
+
+.row-number {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+}
+
+.column-header {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+.fa-heart {
+    color: red;
+}
