@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aW.E === region.V.E)
+	if (region.aY.E === region.W.E)
 	{
-		return 'on line ' + region.aW.E;
+		return 'on line ' + region.aY.E;
 	}
-	return 'on lines ' + region.aW.E + ' through ' + region.V.E;
+	return 'on lines ' + region.aY.E + ' through ' + region.W.E;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
+		impl.aP,
+		impl.a_,
 		impl.aZ,
-		impl.aX,
 		function() { return function() {} }
 	);
 });
@@ -2720,8 +2720,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		s: func(record.s),
-		N: record.N,
-		L: record.L
+		Q: record.Q,
+		N: record.N
 	}
 });
 
@@ -2990,10 +2990,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.s;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.N;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.L) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.N) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
+		impl.aP,
+		impl.a_,
 		impl.aZ,
-		impl.aX,
 		function(sendToApp, initialModel) {
-			var view = impl.a_;
+			var view = impl.a$;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aM,
+		impl.aP,
+		impl.a_,
 		impl.aZ,
-		impl.aX,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.M && impl.M(sendToApp)
-			var view = impl.a_;
+			var divertHrefToApp = impl.P && impl.P(sendToApp)
+			var view = impl.a$;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aE);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aG);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aY) && (_VirtualDom_doc.title = title = doc.aY);
+				(title !== doc.ay) && (_VirtualDom_doc.title = title = doc.ay);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aQ;
-	var onUrlRequest = impl.aR;
+	var onUrlChange = impl.aT;
+	var onUrlRequest = impl.aU;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		M: function(sendToApp)
+		P: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.an === next.an
-							&& curr.ab === next.ab
-							&& curr.aj.a === next.aj.a
+							&& curr.ao === next.ao
+							&& curr.ac === next.ac
+							&& curr.ak.a === next.ak.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aM: function(flags)
+		aP: function(flags)
 		{
-			return A3(impl.aM, flags, _Browser_getUrl(), key);
+			return A3(impl.aP, flags, _Browser_getUrl(), key);
 		},
+		a$: impl.a$,
 		a_: impl.a_,
-		aZ: impl.aZ,
-		aX: impl.aX
+		aZ: impl.aZ
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aK: 'hidden', aF: 'visibilitychange' }
+		? { aN: 'hidden', aH: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aK: 'mozHidden', aF: 'mozvisibilitychange' }
+		? { aN: 'mozHidden', aH: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aK: 'msHidden', aF: 'msvisibilitychange' }
+		? { aN: 'msHidden', aH: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aK: 'webkitHidden', aF: 'webkitvisibilitychange' }
-		: { aK: 'hidden', aF: 'visibilitychange' };
+		? { aN: 'webkitHidden', aH: 'webkitvisibilitychange' }
+		: { aN: 'hidden', aH: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		as: _Browser_getScene(),
-		ay: {
-			aA: _Browser_window.pageXOffset,
-			aB: _Browser_window.pageYOffset,
-			az: _Browser_doc.documentElement.clientWidth,
-			_: _Browser_doc.documentElement.clientHeight
+		at: _Browser_getScene(),
+		aA: {
+			aC: _Browser_window.pageXOffset,
+			aD: _Browser_window.pageYOffset,
+			aB: _Browser_doc.documentElement.clientWidth,
+			aa: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		az: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		_: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aB: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		aa: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			as: {
-				az: node.scrollWidth,
-				_: node.scrollHeight
+			at: {
+				aB: node.scrollWidth,
+				aa: node.scrollHeight
 			},
-			ay: {
-				aA: node.scrollLeft,
-				aB: node.scrollTop,
-				az: node.clientWidth,
-				_: node.clientHeight
+			aA: {
+				aC: node.scrollLeft,
+				aD: node.scrollTop,
+				aB: node.clientWidth,
+				aa: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			as: _Browser_getScene(),
-			ay: {
-				aA: x,
-				aB: y,
-				az: _Browser_doc.documentElement.clientWidth,
-				_: _Browser_doc.documentElement.clientHeight
+			at: _Browser_getScene(),
+			aA: {
+				aC: x,
+				aD: y,
+				aB: _Browser_doc.documentElement.clientWidth,
+				aa: _Browser_doc.documentElement.clientHeight
 			},
-			aI: {
-				aA: x + rect.left,
-				aB: y + rect.top,
-				az: rect.width,
-				_: rect.height
+			aL: {
+				aC: x + rect.left,
+				aD: y + rect.top,
+				aB: rect.width,
+				aa: rect.height
 			}
 		};
 	});
@@ -4371,6 +4371,23 @@ function _Browser_load(url)
 	}));
 }
 
+
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+}
 
 
 
@@ -4500,10 +4517,12 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 
 	return _Utils_Tuple3(newOffset, row, col);
 });
-var $elm$core$Maybe$Nothing = {$: 1};
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $author$project$Model$initialModel = {D: $elm$core$Dict$empty, S: 20, T: $elm$core$Maybe$Nothing, aV: 15};
+var $author$project$Main$ClickedLink = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Main$UrlChanged = function (a) {
+	return {$: 3, a: a};
+};
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$GT = 2;
 var $elm$core$Basics$LT = 0;
@@ -4610,6 +4629,7 @@ var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
+var $elm$core$Maybe$Nothing = {$: 1};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -5007,7 +5027,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {Z: fragment, ab: host, ah: path, aj: port_, an: protocol, ao: query};
+		return {_: fragment, ac: host, ai: path, ak: port_, ao: protocol, ap: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5285,28 +5305,152 @@ var $elm$core$Task$perform = F2(
 		return $elm$core$Task$command(
 			A2($elm$core$Task$map, toMessage, task));
 	});
+var $elm$browser$Browser$application = _Browser_application;
+var $author$project$Main$SpreadSheet = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
+var $author$project$Pages$SpreadSheet$init = function (key) {
+	return {v: $elm$core$Dict$empty, J: 20, K: $elm$core$Maybe$Nothing, af: key, O: 15};
+};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$init = F3(
+	function (_v0, url, key) {
+		return _Utils_Tuple2(
+			$author$project$Main$SpreadSheet(
+				$author$project$Pages$SpreadSheet$init(key)),
+			$elm$core$Platform$Cmd$none);
+	});
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$sandbox = function (impl) {
-	return _Browser_element(
-		{
-			aM: function (_v0) {
-				return _Utils_Tuple2(impl.aM, $elm$core$Platform$Cmd$none);
-			},
-			aX: function (_v1) {
-				return $elm$core$Platform$Sub$none;
-			},
-			aZ: F2(
-				function (msg, model) {
-					return _Utils_Tuple2(
-						A2(impl.aZ, msg, model),
-						$elm$core$Platform$Cmd$none);
-				}),
-			a_: impl.a_
-		});
+var $author$project$Main$GotSpreadSheetMsg = function (a) {
+	return {$: 0, a: a};
 };
+var $author$project$Main$Usage = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Main$getNavKey = function (model) {
+	if (!model.$) {
+		var spreadSheetModel = model.a;
+		return spreadSheetModel.af;
+	} else {
+		var usageModel = model.a;
+		return usageModel.af;
+	}
+};
+var $author$project$Pages$Usage$init = function (key) {
+	return {af: key};
+};
+var $elm$browser$Browser$Navigation$load = _Browser_load;
+var $elm$core$Platform$Cmd$map = _Platform_map;
+var $author$project$Main$mapUpdate = F3(
+	function (toModel, toMsg, _v0) {
+		var model = _v0.a;
+		var cmd = _v0.b;
+		return _Utils_Tuple2(
+			toModel(model),
+			A2($elm$core$Platform$Cmd$map, toMsg, cmd));
+	});
+var $elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {w: frag, x: params, u: unvisited, q: value, z: visited};
+	});
+var $elm$url$Url$Parser$getFirstMatch = function (states) {
+	getFirstMatch:
+	while (true) {
+		if (!states.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var state = states.a;
+			var rest = states.b;
+			var _v1 = state.u;
+			if (!_v1.b) {
+				return $elm$core$Maybe$Just(state.q);
+			} else {
+				if ((_v1.a === '') && (!_v1.b.b)) {
+					return $elm$core$Maybe$Just(state.q);
+				} else {
+					var $temp$states = rest;
+					states = $temp$states;
+					continue getFirstMatch;
+				}
+			}
+		}
+	}
+};
+var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
+	if (!segments.b) {
+		return _List_Nil;
+	} else {
+		if ((segments.a === '') && (!segments.b.b)) {
+			return _List_Nil;
+		} else {
+			var segment = segments.a;
+			var rest = segments.b;
+			return A2(
+				$elm$core$List$cons,
+				segment,
+				$elm$url$Url$Parser$removeFinalEmpty(rest));
+		}
+	}
+};
+var $elm$url$Url$Parser$preparePath = function (path) {
+	var _v0 = A2($elm$core$String$split, '/', path);
+	if (_v0.b && (_v0.a === '')) {
+		var segments = _v0.b;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	} else {
+		var segments = _v0;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	}
+};
+var $elm$url$Url$Parser$addToParametersHelp = F2(
+	function (value, maybeList) {
+		if (maybeList.$ === 1) {
+			return $elm$core$Maybe$Just(
+				_List_fromArray(
+					[value]));
+		} else {
+			var list = maybeList.a;
+			return $elm$core$Maybe$Just(
+				A2($elm$core$List$cons, value, list));
+		}
+	});
+var $elm$url$Url$percentDecode = _Url_percentDecode;
+var $elm$core$Basics$compare = _Utils_compare;
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === -2) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1) {
+					case 0:
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 1:
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
 var $elm$core$Dict$Black = 1;
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5367,7 +5511,6 @@ var $elm$core$Dict$balance = F5(
 			}
 		}
 	});
-var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
 		if (dict.$ === -2) {
@@ -5416,26 +5559,666 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
-var $author$project$Main$update = F2(
+var $elm$core$Dict$getMin = function (dict) {
+	getMin:
+	while (true) {
+		if ((dict.$ === -1) && (dict.d.$ === -1)) {
+			var left = dict.d;
+			var $temp$dict = left;
+			dict = $temp$dict;
+			continue getMin;
+		} else {
+			return dict;
+		}
+	}
+};
+var $elm$core$Dict$moveRedLeft = function (dict) {
+	if (((dict.$ === -1) && (dict.d.$ === -1)) && (dict.e.$ === -1)) {
+		if ((dict.e.d.$ === -1) && (!dict.e.d.a)) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v1 = dict.d;
+			var lClr = _v1.a;
+			var lK = _v1.b;
+			var lV = _v1.c;
+			var lLeft = _v1.d;
+			var lRight = _v1.e;
+			var _v2 = dict.e;
+			var rClr = _v2.a;
+			var rK = _v2.b;
+			var rV = _v2.c;
+			var rLeft = _v2.d;
+			var _v3 = rLeft.a;
+			var rlK = rLeft.b;
+			var rlV = rLeft.c;
+			var rlL = rLeft.d;
+			var rlR = rLeft.e;
+			var rRight = _v2.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				0,
+				rlK,
+				rlV,
+				A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, lK, lV, lLeft, lRight),
+					rlL),
+				A5($elm$core$Dict$RBNode_elm_builtin, 1, rK, rV, rlR, rRight));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v4 = dict.d;
+			var lClr = _v4.a;
+			var lK = _v4.b;
+			var lV = _v4.c;
+			var lLeft = _v4.d;
+			var lRight = _v4.e;
+			var _v5 = dict.e;
+			var rClr = _v5.a;
+			var rK = _v5.b;
+			var rV = _v5.c;
+			var rLeft = _v5.d;
+			var rRight = _v5.e;
+			if (clr === 1) {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var $elm$core$Dict$moveRedRight = function (dict) {
+	if (((dict.$ === -1) && (dict.d.$ === -1)) && (dict.e.$ === -1)) {
+		if ((dict.d.d.$ === -1) && (!dict.d.d.a)) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v1 = dict.d;
+			var lClr = _v1.a;
+			var lK = _v1.b;
+			var lV = _v1.c;
+			var _v2 = _v1.d;
+			var _v3 = _v2.a;
+			var llK = _v2.b;
+			var llV = _v2.c;
+			var llLeft = _v2.d;
+			var llRight = _v2.e;
+			var lRight = _v1.e;
+			var _v4 = dict.e;
+			var rClr = _v4.a;
+			var rK = _v4.b;
+			var rV = _v4.c;
+			var rLeft = _v4.d;
+			var rRight = _v4.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				0,
+				lK,
+				lV,
+				A5($elm$core$Dict$RBNode_elm_builtin, 1, llK, llV, llLeft, llRight),
+				A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					lRight,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, rK, rV, rLeft, rRight)));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v5 = dict.d;
+			var lClr = _v5.a;
+			var lK = _v5.b;
+			var lV = _v5.c;
+			var lLeft = _v5.d;
+			var lRight = _v5.e;
+			var _v6 = dict.e;
+			var rClr = _v6.a;
+			var rK = _v6.b;
+			var rV = _v6.c;
+			var rLeft = _v6.d;
+			var rRight = _v6.e;
+			if (clr === 1) {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					1,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var $elm$core$Dict$removeHelpPrepEQGT = F7(
+	function (targetKey, dict, color, key, value, left, right) {
+		if ((left.$ === -1) && (!left.a)) {
+			var _v1 = left.a;
+			var lK = left.b;
+			var lV = left.c;
+			var lLeft = left.d;
+			var lRight = left.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				lK,
+				lV,
+				lLeft,
+				A5($elm$core$Dict$RBNode_elm_builtin, 0, key, value, lRight, right));
+		} else {
+			_v2$2:
+			while (true) {
+				if ((right.$ === -1) && (right.a === 1)) {
+					if (right.d.$ === -1) {
+						if (right.d.a === 1) {
+							var _v3 = right.a;
+							var _v4 = right.d;
+							var _v5 = _v4.a;
+							return $elm$core$Dict$moveRedRight(dict);
+						} else {
+							break _v2$2;
+						}
+					} else {
+						var _v6 = right.a;
+						var _v7 = right.d;
+						return $elm$core$Dict$moveRedRight(dict);
+					}
+				} else {
+					break _v2$2;
+				}
+			}
+			return dict;
+		}
+	});
+var $elm$core$Dict$removeMin = function (dict) {
+	if ((dict.$ === -1) && (dict.d.$ === -1)) {
+		var color = dict.a;
+		var key = dict.b;
+		var value = dict.c;
+		var left = dict.d;
+		var lColor = left.a;
+		var lLeft = left.d;
+		var right = dict.e;
+		if (lColor === 1) {
+			if ((lLeft.$ === -1) && (!lLeft.a)) {
+				var _v3 = lLeft.a;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					color,
+					key,
+					value,
+					$elm$core$Dict$removeMin(left),
+					right);
+			} else {
+				var _v4 = $elm$core$Dict$moveRedLeft(dict);
+				if (_v4.$ === -1) {
+					var nColor = _v4.a;
+					var nKey = _v4.b;
+					var nValue = _v4.c;
+					var nLeft = _v4.d;
+					var nRight = _v4.e;
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						$elm$core$Dict$removeMin(nLeft),
+						nRight);
+				} else {
+					return $elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			}
+		} else {
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				value,
+				$elm$core$Dict$removeMin(left),
+				right);
+		}
+	} else {
+		return $elm$core$Dict$RBEmpty_elm_builtin;
+	}
+};
+var $elm$core$Dict$removeHelp = F2(
+	function (targetKey, dict) {
+		if (dict.$ === -2) {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_cmp(targetKey, key) < 0) {
+				if ((left.$ === -1) && (left.a === 1)) {
+					var _v4 = left.a;
+					var lLeft = left.d;
+					if ((lLeft.$ === -1) && (!lLeft.a)) {
+						var _v6 = lLeft.a;
+						return A5(
+							$elm$core$Dict$RBNode_elm_builtin,
+							color,
+							key,
+							value,
+							A2($elm$core$Dict$removeHelp, targetKey, left),
+							right);
+					} else {
+						var _v7 = $elm$core$Dict$moveRedLeft(dict);
+						if (_v7.$ === -1) {
+							var nColor = _v7.a;
+							var nKey = _v7.b;
+							var nValue = _v7.c;
+							var nLeft = _v7.d;
+							var nRight = _v7.e;
+							return A5(
+								$elm$core$Dict$balance,
+								nColor,
+								nKey,
+								nValue,
+								A2($elm$core$Dict$removeHelp, targetKey, nLeft),
+								nRight);
+						} else {
+							return $elm$core$Dict$RBEmpty_elm_builtin;
+						}
+					}
+				} else {
+					return A5(
+						$elm$core$Dict$RBNode_elm_builtin,
+						color,
+						key,
+						value,
+						A2($elm$core$Dict$removeHelp, targetKey, left),
+						right);
+				}
+			} else {
+				return A2(
+					$elm$core$Dict$removeHelpEQGT,
+					targetKey,
+					A7($elm$core$Dict$removeHelpPrepEQGT, targetKey, dict, color, key, value, left, right));
+			}
+		}
+	});
+var $elm$core$Dict$removeHelpEQGT = F2(
+	function (targetKey, dict) {
+		if (dict.$ === -1) {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_eq(targetKey, key)) {
+				var _v1 = $elm$core$Dict$getMin(right);
+				if (_v1.$ === -1) {
+					var minKey = _v1.b;
+					var minValue = _v1.c;
+					return A5(
+						$elm$core$Dict$balance,
+						color,
+						minKey,
+						minValue,
+						left,
+						$elm$core$Dict$removeMin(right));
+				} else {
+					return $elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			} else {
+				return A5(
+					$elm$core$Dict$balance,
+					color,
+					key,
+					value,
+					left,
+					A2($elm$core$Dict$removeHelp, targetKey, right));
+			}
+		} else {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		}
+	});
+var $elm$core$Dict$remove = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$removeHelp, key, dict);
+		if ((_v0.$ === -1) && (!_v0.a)) {
+			var _v1 = _v0.a;
+			var k = _v0.b;
+			var v = _v0.c;
+			var l = _v0.d;
+			var r = _v0.e;
+			return A5($elm$core$Dict$RBNode_elm_builtin, 1, k, v, l, r);
+		} else {
+			var x = _v0;
+			return x;
+		}
+	});
+var $elm$core$Dict$update = F3(
+	function (targetKey, alter, dictionary) {
+		var _v0 = alter(
+			A2($elm$core$Dict$get, targetKey, dictionary));
+		if (!_v0.$) {
+			var value = _v0.a;
+			return A3($elm$core$Dict$insert, targetKey, value, dictionary);
+		} else {
+			return A2($elm$core$Dict$remove, targetKey, dictionary);
+		}
+	});
+var $elm$url$Url$Parser$addParam = F2(
+	function (segment, dict) {
+		var _v0 = A2($elm$core$String$split, '=', segment);
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			var rawKey = _v0.a;
+			var _v1 = _v0.b;
+			var rawValue = _v1.a;
+			var _v2 = $elm$url$Url$percentDecode(rawKey);
+			if (_v2.$ === 1) {
+				return dict;
+			} else {
+				var key = _v2.a;
+				var _v3 = $elm$url$Url$percentDecode(rawValue);
+				if (_v3.$ === 1) {
+					return dict;
+				} else {
+					var value = _v3.a;
+					return A3(
+						$elm$core$Dict$update,
+						key,
+						$elm$url$Url$Parser$addToParametersHelp(value),
+						dict);
+				}
+			}
+		} else {
+			return dict;
+		}
+	});
+var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
+	if (maybeQuery.$ === 1) {
+		return $elm$core$Dict$empty;
+	} else {
+		var qry = maybeQuery.a;
+		return A3(
+			$elm$core$List$foldr,
+			$elm$url$Url$Parser$addParam,
+			$elm$core$Dict$empty,
+			A2($elm$core$String$split, '&', qry));
+	}
+};
+var $elm$url$Url$Parser$parse = F2(
+	function (_v0, url) {
+		var parser = _v0;
+		return $elm$url$Url$Parser$getFirstMatch(
+			parser(
+				A5(
+					$elm$url$Url$Parser$State,
+					_List_Nil,
+					$elm$url$Url$Parser$preparePath(url.ai),
+					$elm$url$Url$Parser$prepareQuery(url.ap),
+					url._,
+					$elm$core$Basics$identity)));
+	});
+var $author$project$Route$Index = 0;
+var $author$project$Route$Usage = 1;
+var $elm$url$Url$Parser$Parser = $elm$core$Basics$identity;
+var $elm$url$Url$Parser$mapState = F2(
+	function (func, _v0) {
+		var visited = _v0.z;
+		var unvisited = _v0.u;
+		var params = _v0.x;
+		var frag = _v0.w;
+		var value = _v0.q;
+		return A5(
+			$elm$url$Url$Parser$State,
+			visited,
+			unvisited,
+			params,
+			frag,
+			func(value));
+	});
+var $elm$url$Url$Parser$map = F2(
+	function (subValue, _v0) {
+		var parseArg = _v0;
+		return function (_v1) {
+			var visited = _v1.z;
+			var unvisited = _v1.u;
+			var params = _v1.x;
+			var frag = _v1.w;
+			var value = _v1.q;
+			return A2(
+				$elm$core$List$map,
+				$elm$url$Url$Parser$mapState(value),
+				parseArg(
+					A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
+		};
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$url$Url$Parser$oneOf = function (parsers) {
+	return function (state) {
+		return A2(
+			$elm$core$List$concatMap,
+			function (_v0) {
+				var parser = _v0;
+				return parser(state);
+			},
+			parsers);
+	};
+};
+var $elm$url$Url$Parser$s = function (str) {
+	return function (_v0) {
+		var visited = _v0.z;
+		var unvisited = _v0.u;
+		var params = _v0.x;
+		var frag = _v0.w;
+		var value = _v0.q;
+		if (!unvisited.b) {
+			return _List_Nil;
+		} else {
+			var next = unvisited.a;
+			var rest = unvisited.b;
+			return _Utils_eq(next, str) ? _List_fromArray(
+				[
+					A5(
+					$elm$url$Url$Parser$State,
+					A2($elm$core$List$cons, next, visited),
+					rest,
+					params,
+					frag,
+					value)
+				]) : _List_Nil;
+		}
+	};
+};
+var $author$project$Route$parser = $elm$url$Url$Parser$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			$elm$url$Url$Parser$map,
+			0,
+			$elm$url$Url$Parser$s('index.html')),
+			A2(
+			$elm$url$Url$Parser$map,
+			1,
+			$elm$url$Url$Parser$s('usage'))
+		]));
+var $author$project$Route$parse = function (url) {
+	return A2($elm$url$Url$Parser$parse, $author$project$Route$parser, url);
+};
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 1) {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 1) {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.ao;
+		if (!_v0) {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url._,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.ap,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.ak,
+					_Utils_ap(http, url.ac)),
+				url.ai)));
+};
+var $author$project$Pages$SpreadSheet$update = F2(
 	function (msg, model) {
 		if (!msg.$) {
 			var cellPosition = msg.a;
 			var input = msg.b;
-			return _Utils_update(
-				model,
-				{
-					D: A3($elm$core$Dict$insert, cellPosition, input, model.D)
-				});
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						v: A3($elm$core$Dict$insert, cellPosition, input, model.v)
+					}),
+				$elm$core$Platform$Cmd$none);
 		} else {
 			var cellPosition = msg.a;
-			return _Utils_update(
-				model,
-				{
-					T: $elm$core$Maybe$Just(cellPosition)
-				});
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						K: $elm$core$Maybe$Just(cellPosition)
+					}),
+				$elm$core$Platform$Cmd$none);
 		}
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		var _v0 = _Utils_Tuple2(msg, model);
+		_v0$3:
+		while (true) {
+			switch (_v0.a.$) {
+				case 0:
+					if (!_v0.b.$) {
+						var spreadSheetMsg = _v0.a.a;
+						var spreadSheetModel = _v0.b.a;
+						return A3(
+							$author$project$Main$mapUpdate,
+							$author$project$Main$SpreadSheet,
+							$author$project$Main$GotSpreadSheetMsg,
+							A2($author$project$Pages$SpreadSheet$update, spreadSheetMsg, spreadSheetModel));
+					} else {
+						break _v0$3;
+					}
+				case 2:
+					var urlRequest = _v0.a.a;
+					if (!urlRequest.$) {
+						var url = urlRequest.a;
+						return _Utils_Tuple2(
+							model,
+							A2(
+								$elm$browser$Browser$Navigation$pushUrl,
+								$author$project$Main$getNavKey(model),
+								$elm$url$Url$toString(url)));
+					} else {
+						var url = urlRequest.a;
+						return _Utils_Tuple2(
+							model,
+							$elm$browser$Browser$Navigation$load(url));
+					}
+				case 3:
+					var url = _v0.a.a;
+					var _v2 = $author$project$Route$parse(url);
+					if (!_v2.$) {
+						if (!_v2.a) {
+							var _v3 = _v2.a;
+							return _Utils_Tuple2(
+								$author$project$Main$SpreadSheet(
+									$author$project$Pages$SpreadSheet$init(
+										$author$project$Main$getNavKey(model))),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							var _v4 = _v2.a;
+							return _Utils_Tuple2(
+								$author$project$Main$Usage(
+									$author$project$Pages$Usage$init(
+										$author$project$Main$getNavKey(model))),
+								$elm$core$Platform$Cmd$none);
+						}
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				default:
+					break _v0$3;
+			}
+		}
+		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+	});
+var $author$project$Main$GotUsageMessage = function (a) {
+	return {$: 1, a: a};
+};
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5446,6 +6229,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
@@ -5456,7 +6240,7 @@ var $elm$html$Html$Attributes$href = function (url) {
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$FooterView$footerView = A2(
+var $author$project$Components$Footer$component = A2(
 	$elm$html$Html$footer,
 	_List_Nil,
 	_List_fromArray(
@@ -5507,81 +6291,6 @@ var $author$project$FooterView$footerView = A2(
 					$elm$html$Html$text('Copyright Alexander Goussas 2023')
 				]))
 		]));
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $elm$core$String$cons = _String_cons;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
-};
-var $elm$core$Char$fromCode = _Char_fromCode;
-var $author$project$Main$getLetterForColumn = function (col) {
-	return $elm$core$Char$fromCode(col + 64);
-};
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $author$project$Main$viewSpreadSheetHeaderColumn = function (col) {
-	return (!col) ? A2($elm$html$Html$th, _List_Nil, _List_Nil) : A2(
-		$elm$html$Html$th,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('column-header')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text(
-				$elm$core$String$fromChar(
-					$author$project$Main$getLetterForColumn(col)))
-			]));
-};
-var $author$project$Main$viewSpreadSheetHeader = function (cols) {
-	return A2(
-		$elm$html$Html$tr,
-		_List_Nil,
-		A2(
-			$elm$core$List$map,
-			$author$project$Main$viewSpreadSheetHeaderColumn,
-			A2($elm$core$List$range, 0, cols)));
-};
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === -2) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1) {
-					case 0:
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 1:
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $author$project$Msg$EditCell = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $author$project$Msg$FocusCell = function (a) {
-	return {$: 1, a: a};
-};
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5606,6 +6315,136 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$List$map,
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
+};
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$nav = _VirtualDom_node('nav');
+var $author$project$Components$Navbar$component = function (isActive) {
+	return A2(
+		$elm$html$Html$nav,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('app-nav')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('/index.html'),
+						$elm$html$Html$Attributes$classList(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'active',
+								isActive(0))
+							]))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('SpreadSheet')
+					])),
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('/usage'),
+						$elm$html$Html$Attributes$classList(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'active',
+								isActive(1))
+							]))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Usage')
+					]))
+			]));
+};
+var $author$project$Main$isActive = F2(
+	function (model, route) {
+		var _v0 = _Utils_Tuple2(model, route);
+		_v0$2:
+		while (true) {
+			if (!_v0.a.$) {
+				if (!_v0.b) {
+					var _v1 = _v0.b;
+					return true;
+				} else {
+					break _v0$2;
+				}
+			} else {
+				if (_v0.b === 1) {
+					var _v2 = _v0.b;
+					return true;
+				} else {
+					break _v0$2;
+				}
+			}
+		}
+		return false;
+	});
+var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
+var $author$project$Main$mapView = F3(
+	function (model, toMsg, _v0) {
+		var title = _v0.ay;
+		var content = _v0.aI;
+		return {
+			aG: _List_fromArray(
+				[
+					$author$project$Components$Navbar$component(
+					$author$project$Main$isActive(model)),
+					A2($elm$html$Html$map, toMsg, content),
+					$author$project$Components$Footer$component
+				]),
+			ay: title
+		};
+	});
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Char$fromCode = _Char_fromCode;
+var $author$project$Pages$SpreadSheet$getLetterForColumn = function (col) {
+	return $elm$core$Char$fromCode(col + 64);
+};
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $author$project$Pages$SpreadSheet$viewSpreadSheetHeaderColumn = function (col) {
+	return (!col) ? A2($elm$html$Html$th, _List_Nil, _List_Nil) : A2(
+		$elm$html$Html$th,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('column-header')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(
+				$elm$core$String$fromChar(
+					$author$project$Pages$SpreadSheet$getLetterForColumn(col)))
+			]));
+};
+var $author$project$Pages$SpreadSheet$viewSpreadSheetHeader = function (cols) {
+	return A2(
+		$elm$html$Html$tr,
+		_List_Nil,
+		A2(
+			$elm$core$List$map,
+			$author$project$Pages$SpreadSheet$viewSpreadSheetHeaderColumn,
+			A2($elm$core$List$range, 0, cols)));
+};
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $author$project$Pages$SpreadSheet$EditCell = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $author$project$Pages$SpreadSheet$FocusCell = function (a) {
+	return {$: 1, a: a};
 };
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm_community$maybe_extra$Maybe$Extra$isNothing = function (m) {
@@ -5705,7 +6544,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {R: col, aG: contextStack, ak: problem, ar: row};
+		return {U: col, aJ: contextStack, al: problem, as: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -5713,7 +6552,7 @@ var $elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			$elm$parser$Parser$Advanced$AddRight,
 			$elm$parser$Parser$Advanced$Empty,
-			A4($elm$parser$Parser$Advanced$DeadEnd, s.ar, s.R, x, s.c));
+			A4($elm$parser$Parser$Advanced$DeadEnd, s.as, s.U, x, s.c));
 	});
 var $elm$parser$Parser$Advanced$end = function (x) {
 	return function (s) {
@@ -5844,7 +6683,7 @@ var $elm$parser$Parser$Advanced$andThen = F2(
 		};
 	});
 var $elm$parser$Parser$andThen = $elm$parser$Parser$Advanced$andThen;
-var $author$project$Expr$EPlus = F2(
+var $author$project$SpreadSheet$Expr$EPlus = F2(
 	function (a, b) {
 		return {$: 2, a: a, b: b};
 	});
@@ -5871,7 +6710,7 @@ var $elm$parser$Parser$Advanced$lazy = function (thunk) {
 	};
 };
 var $elm$parser$Parser$lazy = $elm$parser$Parser$Advanced$lazy;
-var $author$project$Expr$ENum = function (a) {
+var $author$project$SpreadSheet$Expr$ENum = function (a) {
 	return {$: 0, a: a};
 };
 var $elm$parser$Parser$ExpectingInt = {$: 1};
@@ -5879,7 +6718,7 @@ var $elm$parser$Parser$Advanced$consumeBase = _Parser_consumeBase;
 var $elm$parser$Parser$Advanced$consumeBase16 = _Parser_consumeBase16;
 var $elm$parser$Parser$Advanced$bumpOffset = F2(
 	function (newOffset, s) {
-		return {R: s.R + (newOffset - s.b), c: s.c, d: s.d, b: newOffset, ar: s.ar, a: s.a};
+		return {U: s.U + (newOffset - s.b), c: s.c, d: s.d, b: newOffset, as: s.as, a: s.a};
 	});
 var $elm$parser$Parser$Advanced$chompBase10 = _Parser_chompBase10;
 var $elm$parser$Parser$Advanced$isAsciiCode = _Parser_isAsciiCode;
@@ -5942,7 +6781,7 @@ var $elm$parser$Parser$Advanced$finalizeFloat = F6(
 			return A2(
 				$elm$parser$Parser$Advanced$Bad,
 				true,
-				A4($elm$parser$Parser$Advanced$fromInfo, s.ar, s.R - (floatOffset + s.b), invalid, s.c));
+				A4($elm$parser$Parser$Advanced$fromInfo, s.as, s.U - (floatOffset + s.b), invalid, s.c));
 		} else {
 			if (_Utils_eq(s.b, floatOffset)) {
 				return A2(
@@ -5988,37 +6827,37 @@ var $elm$parser$Parser$Advanced$number = function (c) {
 			var baseOffset = zeroOffset + 1;
 			return A3($elm$parser$Parser$Advanced$isAsciiCode, 120, zeroOffset, s.a) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.aO,
-				c.aa,
+				c.aR,
+				c.ab,
 				baseOffset,
 				A2($elm$parser$Parser$Advanced$consumeBase16, baseOffset, s.a),
 				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 111, zeroOffset, s.a) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.aO,
-				c.ag,
+				c.aR,
+				c.ah,
 				baseOffset,
 				A3($elm$parser$Parser$Advanced$consumeBase, 8, baseOffset, s.a),
 				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 98, zeroOffset, s.a) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.aO,
-				c.P,
+				c.aR,
+				c.S,
 				baseOffset,
 				A3($elm$parser$Parser$Advanced$consumeBase, 2, baseOffset, s.a),
 				s) : A6(
 				$elm$parser$Parser$Advanced$finalizeFloat,
-				c.aO,
-				c.X,
-				c.ac,
+				c.aR,
 				c.Y,
+				c.ad,
+				c.Z,
 				_Utils_Tuple2(zeroOffset, 0),
 				s)));
 		} else {
 			return A6(
 				$elm$parser$Parser$Advanced$finalizeFloat,
-				c.aO,
-				c.X,
-				c.ac,
+				c.aR,
 				c.Y,
+				c.ad,
+				c.Z,
 				A3($elm$parser$Parser$Advanced$consumeBase, 10, s.b, s.a),
 				s);
 		}
@@ -6028,13 +6867,13 @@ var $elm$parser$Parser$Advanced$int = F2(
 	function (expecting, invalid) {
 		return $elm$parser$Parser$Advanced$number(
 			{
-				P: $elm$core$Result$Err(invalid),
-				X: expecting,
-				Y: $elm$core$Result$Err(invalid),
-				aa: $elm$core$Result$Err(invalid),
-				ac: $elm$core$Result$Ok($elm$core$Basics$identity),
-				aO: invalid,
-				ag: $elm$core$Result$Err(invalid)
+				S: $elm$core$Result$Err(invalid),
+				Y: expecting,
+				Z: $elm$core$Result$Err(invalid),
+				ab: $elm$core$Result$Err(invalid),
+				ad: $elm$core$Result$Ok($elm$core$Basics$identity),
+				aR: invalid,
+				ah: $elm$core$Result$Err(invalid)
 			});
 	});
 var $elm$parser$Parser$int = A2($elm$parser$Parser$Advanced$int, $elm$parser$Parser$ExpectingInt, $elm$parser$Parser$ExpectingInt);
@@ -6060,8 +6899,8 @@ var $elm$parser$Parser$Advanced$map = F2(
 		};
 	});
 var $elm$parser$Parser$map = $elm$parser$Parser$Advanced$map;
-var $author$project$Parser_$parseNumber = A2($elm$parser$Parser$map, $author$project$Expr$ENum, $elm$parser$Parser$int);
-var $author$project$Expr$EVar = F2(
+var $author$project$SpreadSheet$Parser$parseNumber = A2($elm$parser$Parser$map, $author$project$SpreadSheet$Expr$ENum, $elm$parser$Parser$int);
+var $author$project$SpreadSheet$Expr$EVar = F2(
 	function (a, b) {
 		return {$: 3, a: a, b: b};
 	});
@@ -6099,7 +6938,7 @@ var $elm$parser$Parser$Advanced$varHelp = F7(
 		while (true) {
 			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, offset, src);
 			if (_Utils_eq(newOffset, -1)) {
-				return {R: col, c: context, d: indent, b: offset, ar: row, a: src};
+				return {U: col, c: context, d: indent, b: offset, as: row, a: src};
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -6139,25 +6978,25 @@ var $elm$parser$Parser$Advanced$varHelp = F7(
 	});
 var $elm$parser$Parser$Advanced$variable = function (i) {
 	return function (s) {
-		var firstOffset = A3($elm$parser$Parser$Advanced$isSubChar, i.aW, s.b, s.a);
+		var firstOffset = A3($elm$parser$Parser$Advanced$isSubChar, i.aY, s.b, s.a);
 		if (_Utils_eq(firstOffset, -1)) {
 			return A2(
 				$elm$parser$Parser$Advanced$Bad,
 				false,
-				A2($elm$parser$Parser$Advanced$fromState, s, i.X));
+				A2($elm$parser$Parser$Advanced$fromState, s, i.Y));
 		} else {
-			var s1 = _Utils_eq(firstOffset, -2) ? A7($elm$parser$Parser$Advanced$varHelp, i.aN, s.b + 1, s.ar + 1, 1, s.a, s.d, s.c) : A7($elm$parser$Parser$Advanced$varHelp, i.aN, firstOffset, s.ar, s.R + 1, s.a, s.d, s.c);
+			var s1 = _Utils_eq(firstOffset, -2) ? A7($elm$parser$Parser$Advanced$varHelp, i.aQ, s.b + 1, s.as + 1, 1, s.a, s.d, s.c) : A7($elm$parser$Parser$Advanced$varHelp, i.aQ, firstOffset, s.as, s.U + 1, s.a, s.d, s.c);
 			var name = A3($elm$core$String$slice, s.b, s1.b, s.a);
-			return A2($elm$core$Set$member, name, i.aT) ? A2(
+			return A2($elm$core$Set$member, name, i.aW) ? A2(
 				$elm$parser$Parser$Advanced$Bad,
 				false,
-				A2($elm$parser$Parser$Advanced$fromState, s, i.X)) : A3($elm$parser$Parser$Advanced$Good, true, name, s1);
+				A2($elm$parser$Parser$Advanced$fromState, s, i.Y)) : A3($elm$parser$Parser$Advanced$Good, true, name, s1);
 		}
 	};
 };
 var $elm$parser$Parser$variable = function (i) {
 	return $elm$parser$Parser$Advanced$variable(
-		{X: $elm$parser$Parser$ExpectingVariable, aN: i.aN, aT: i.aT, aW: i.aW});
+		{Y: $elm$parser$Parser$ExpectingVariable, aQ: i.aQ, aW: i.aW, aY: i.aY});
 };
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -6168,11 +7007,11 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Parser_$parseVariable = A2(
+var $author$project$SpreadSheet$Parser$parseVariable = A2(
 	$elm$parser$Parser$map,
 	function (_var) {
 		return A2(
-			$author$project$Expr$EVar,
+			$author$project$SpreadSheet$Expr$EVar,
 			A2(
 				$elm$core$Maybe$withDefault,
 				0,
@@ -6188,10 +7027,10 @@ var $author$project$Parser_$parseVariable = A2(
 						A2($elm$core$String$left, 1, _var)))));
 	},
 	$elm$parser$Parser$variable(
-		{aN: $elm$core$Char$isDigit, aT: $elm$core$Set$empty, aW: $elm$core$Char$isUpper}));
-var $author$project$Parser_$parsePrimaryExpr = $elm$parser$Parser$oneOf(
+		{aQ: $elm$core$Char$isDigit, aW: $elm$core$Set$empty, aY: $elm$core$Char$isUpper}));
+var $author$project$SpreadSheet$Parser$parsePrimaryExpr = $elm$parser$Parser$oneOf(
 	_List_fromArray(
-		[$author$project$Parser_$parseVariable, $author$project$Parser_$parseNumber]));
+		[$author$project$SpreadSheet$Parser$parseVariable, $author$project$SpreadSheet$Parser$parseNumber]));
 var $elm$parser$Parser$Advanced$succeed = function (a) {
 	return function (s) {
 		return A3($elm$parser$Parser$Advanced$Good, false, a, s);
@@ -6212,7 +7051,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var expecting = _v0.b;
 	var progress = !$elm$core$String$isEmpty(str);
 	return function (s) {
-		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.ar, s.R, s.a);
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.as, s.U, s.a);
 		var newOffset = _v1.a;
 		var newRow = _v1.b;
 		var newCol = _v1.c;
@@ -6223,7 +7062,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 			$elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{R: newCol, c: s.c, d: s.d, b: newOffset, ar: newRow, a: s.a});
+			{U: newCol, c: s.c, d: s.d, b: newOffset, as: newRow, a: s.a});
 	};
 };
 var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
@@ -6234,7 +7073,7 @@ var $elm$parser$Parser$symbol = function (str) {
 			str,
 			$elm$parser$Parser$ExpectingSymbol(str)));
 };
-function $author$project$Parser_$cyclic$parseSumExpr() {
+function $author$project$SpreadSheet$Parser$cyclic$parseSumExpr() {
 	return $elm$parser$Parser$oneOf(
 		_List_fromArray(
 			[
@@ -6242,46 +7081,46 @@ function $author$project$Parser_$cyclic$parseSumExpr() {
 				$elm$parser$Parser$keeper,
 				A2(
 					$elm$parser$Parser$keeper,
-					$elm$parser$Parser$succeed($author$project$Expr$EPlus),
+					$elm$parser$Parser$succeed($author$project$SpreadSheet$Expr$EPlus),
 					A2(
 						$elm$parser$Parser$ignorer,
-						$elm$parser$Parser$backtrackable($author$project$Parser_$parsePrimaryExpr),
+						$elm$parser$Parser$backtrackable($author$project$SpreadSheet$Parser$parsePrimaryExpr),
 						$elm$parser$Parser$symbol('+'))),
 				$elm$parser$Parser$lazy(
 					function (_v0) {
-						return $author$project$Parser_$cyclic$parseSumExpr();
+						return $author$project$SpreadSheet$Parser$cyclic$parseSumExpr();
 					})),
-				$author$project$Parser_$parsePrimaryExpr
+				$author$project$SpreadSheet$Parser$parsePrimaryExpr
 			]));
 }
-var $author$project$Parser_$parseSumExpr = $author$project$Parser_$cyclic$parseSumExpr();
-$author$project$Parser_$cyclic$parseSumExpr = function () {
-	return $author$project$Parser_$parseSumExpr;
+var $author$project$SpreadSheet$Parser$parseSumExpr = $author$project$SpreadSheet$Parser$cyclic$parseSumExpr();
+$author$project$SpreadSheet$Parser$cyclic$parseSumExpr = function () {
+	return $author$project$SpreadSheet$Parser$parseSumExpr;
 };
-var $author$project$Parser_$parseExpr = $elm$parser$Parser$oneOf(
+var $author$project$SpreadSheet$Parser$parseExpr = $elm$parser$Parser$oneOf(
 	_List_fromArray(
-		[$author$project$Parser_$parseSumExpr]));
-var $author$project$Parser_$parseEquation = A2(
+		[$author$project$SpreadSheet$Parser$parseSumExpr]));
+var $author$project$SpreadSheet$Parser$parseEquation = A2(
 	$elm$parser$Parser$andThen,
 	function (_v0) {
-		return $author$project$Parser_$parseExpr;
+		return $author$project$SpreadSheet$Parser$parseExpr;
 	},
 	$elm$parser$Parser$symbol('='));
-var $author$project$Parser_$parser = A2(
+var $author$project$SpreadSheet$Parser$parser = A2(
 	$elm$parser$Parser$keeper,
 	$elm$parser$Parser$succeed($elm$core$Basics$identity),
 	A2(
 		$elm$parser$Parser$ignorer,
 		$elm$parser$Parser$oneOf(
 			_List_fromArray(
-				[$author$project$Parser_$parseNumber, $author$project$Parser_$parseEquation])),
+				[$author$project$SpreadSheet$Parser$parseNumber, $author$project$SpreadSheet$Parser$parseEquation])),
 		$elm$parser$Parser$end));
 var $elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {R: col, ak: problem, ar: row};
+		return {U: col, al: problem, as: row};
 	});
 var $elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3($elm$parser$Parser$DeadEnd, p.ar, p.R, p.ak);
+	return A3($elm$parser$Parser$DeadEnd, p.as, p.U, p.al);
 };
 var $elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -6313,7 +7152,7 @@ var $elm$parser$Parser$Advanced$run = F2(
 	function (_v0, src) {
 		var parse = _v0;
 		var _v1 = parse(
-			{R: 1, c: _List_Nil, d: 1, b: 0, ar: 1, a: src});
+			{U: 1, c: _List_Nil, d: 1, b: 0, as: 1, a: src});
 		if (!_v1.$) {
 			var value = _v1.b;
 			return $elm$core$Result$Ok(value);
@@ -6335,8 +7174,8 @@ var $elm$parser$Parser$run = F2(
 				A2($elm$core$List$map, $elm$parser$Parser$problemToDeadEnd, problems));
 		}
 	});
-var $author$project$Parser_$parse = function (input) {
-	var _v0 = A2($elm$parser$Parser$run, $author$project$Parser_$parser, input);
+var $author$project$SpreadSheet$Parser$parse = function (input) {
+	var _v0 = A2($elm$parser$Parser$run, $author$project$SpreadSheet$Parser$parser, input);
 	if (_v0.$ === 1) {
 		return $elm$core$Maybe$Nothing;
 	} else {
@@ -6344,7 +7183,7 @@ var $author$project$Parser_$parse = function (input) {
 		return $elm$core$Maybe$Just(result);
 	}
 };
-var $author$project$Eval$eval = F2(
+var $author$project$SpreadSheet$Eval$eval = F2(
 	function (env, expr) {
 		switch (expr.$) {
 			case 0:
@@ -6358,18 +7197,18 @@ var $author$project$Eval$eval = F2(
 				return A3(
 					$elm$core$Maybe$map2,
 					$elm$core$Basics$add,
-					A2($author$project$Eval$eval, env, e1),
-					A2($author$project$Eval$eval, env, e2));
+					A2($author$project$SpreadSheet$Eval$eval, env, e1),
+					A2($author$project$SpreadSheet$Eval$eval, env, e2));
 			default:
 				var row = expr.a;
 				var col = expr.b;
 				return A2(
 					$elm$core$Maybe$andThen,
 					function (cellContents) {
-						var _v1 = $author$project$Parser_$parse(cellContents);
+						var _v1 = $author$project$SpreadSheet$Parser$parse(cellContents);
 						if (!_v1.$) {
 							var result = _v1.a;
-							return A2($author$project$Eval$eval, env, result);
+							return A2($author$project$SpreadSheet$Eval$eval, env, result);
 						} else {
 							return $elm$core$Maybe$Nothing;
 						}
@@ -6380,31 +7219,31 @@ var $author$project$Eval$eval = F2(
 						env));
 		}
 	});
-var $author$project$Main$evalCellContents = F2(
+var $author$project$Pages$SpreadSheet$evalCellContents = F2(
 	function (cells, cellContents) {
 		return $elm$core$String$isEmpty(cellContents) ? $elm$core$Maybe$Just('') : A2(
 			$elm$core$Maybe$map,
 			$elm$core$String$fromInt,
 			A2(
 				$elm$core$Maybe$andThen,
-				$author$project$Eval$eval(cells),
-				$author$project$Parser_$parse(cellContents)));
+				$author$project$SpreadSheet$Eval$eval(cells),
+				$author$project$SpreadSheet$Parser$parse(cellContents)));
 	});
-var $author$project$Main$runCell = F3(
+var $author$project$Pages$SpreadSheet$runCell = F3(
 	function (model, cellPosition, cellContents) {
-		var _v0 = model.T;
+		var _v0 = model.K;
 		if (_v0.$ === 1) {
-			return A2($author$project$Main$evalCellContents, model.D, cellContents);
+			return A2($author$project$Pages$SpreadSheet$evalCellContents, model.v, cellContents);
 		} else {
 			var currentCellPos = _v0.a;
-			return _Utils_eq(currentCellPos, cellPosition) ? $elm$core$Maybe$Just(cellContents) : A2($author$project$Main$evalCellContents, model.D, cellContents);
+			return _Utils_eq(currentCellPos, cellPosition) ? $elm$core$Maybe$Just(cellContents) : A2($author$project$Pages$SpreadSheet$evalCellContents, model.v, cellContents);
 		}
 	});
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$viewCell = F3(
+var $author$project$Pages$SpreadSheet$viewCell = F3(
 	function (model, cellPosition, cellContents) {
-		var cellResult = A3($author$project$Main$runCell, model, cellPosition, cellContents);
+		var cellResult = A3($author$project$Pages$SpreadSheet$runCell, model, cellPosition, cellContents);
 		return A2(
 			$elm$html$Html$td,
 			_List_Nil,
@@ -6418,9 +7257,9 @@ var $author$project$Main$viewCell = F3(
 							$elm$html$Html$Attributes$value(
 							A2($elm$core$Maybe$withDefault, '#ERR', cellResult)),
 							$elm$html$Html$Events$onInput(
-							$author$project$Msg$EditCell(cellPosition)),
+							$author$project$Pages$SpreadSheet$EditCell(cellPosition)),
 							$elm$html$Html$Events$onFocus(
-							$author$project$Msg$FocusCell(cellPosition)),
+							$author$project$Pages$SpreadSheet$FocusCell(cellPosition)),
 							$elm$html$Html$Attributes$classList(
 							_List_fromArray(
 								[
@@ -6432,7 +7271,7 @@ var $author$project$Main$viewCell = F3(
 					_List_Nil)
 				]));
 	});
-var $author$project$Main$viewSpreadSheetRow = F3(
+var $author$project$Pages$SpreadSheet$viewSpreadSheetRow = F3(
 	function (model, row, col) {
 		if (!col) {
 			return A2(
@@ -6449,15 +7288,15 @@ var $author$project$Main$viewSpreadSheetRow = F3(
 		} else {
 			var cellPosition = _Utils_Tuple2(
 				row,
-				$author$project$Main$getLetterForColumn(col));
+				$author$project$Pages$SpreadSheet$getLetterForColumn(col));
 			var cellContents = A2(
 				$elm$core$Maybe$withDefault,
 				'',
-				A2($elm$core$Dict$get, cellPosition, model.D));
-			return A3($author$project$Main$viewCell, model, cellPosition, cellContents);
+				A2($elm$core$Dict$get, cellPosition, model.v));
+			return A3($author$project$Pages$SpreadSheet$viewCell, model, cellPosition, cellContents);
 		}
 	});
-var $author$project$Main$viewSpreadSheetRows = function (model) {
+var $author$project$Pages$SpreadSheet$viewSpreadSheetRows = function (model) {
 	return A2(
 		$elm$core$List$map,
 		function (row) {
@@ -6467,41 +7306,166 @@ var $author$project$Main$viewSpreadSheetRows = function (model) {
 				A2(
 					$elm$core$List$map,
 					function (col) {
-						return A3($author$project$Main$viewSpreadSheetRow, model, row, col);
+						return A3($author$project$Pages$SpreadSheet$viewSpreadSheetRow, model, row, col);
 					},
-					A2($elm$core$List$range, 0, model.S)));
+					A2($elm$core$List$range, 0, model.J)));
 		},
-		A2($elm$core$List$range, 1, model.aV));
+		A2($elm$core$List$range, 1, model.O));
 };
-var $author$project$Main$view = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$id('spreadsheet')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Elm SpreadSheet')
-					])),
-				A2(
-				$elm$html$Html$table,
-				_List_Nil,
-				_Utils_ap(
+var $author$project$Pages$SpreadSheet$view = function (model) {
+	return {
+		aI: A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$id('spreadsheet')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h1,
+					_List_Nil,
 					_List_fromArray(
 						[
-							$author$project$Main$viewSpreadSheetHeader(model.S)
-						]),
-					$author$project$Main$viewSpreadSheetRows(model))),
-				$author$project$FooterView$footerView
-			]));
+							$elm$html$Html$text('Elm SpreadSheet')
+						])),
+					A2(
+					$elm$html$Html$table,
+					_List_Nil,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$author$project$Pages$SpreadSheet$viewSpreadSheetHeader(model.J)
+							]),
+						$author$project$Pages$SpreadSheet$viewSpreadSheetRows(model)))
+				])),
+		ay: 'Elm SpreadSheet'
+	};
 };
-var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{aM: $author$project$Model$initialModel, aZ: $author$project$Main$update, a_: $author$project$Main$view});
+var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$html$Html$pre = _VirtualDom_node('pre');
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Pages$Usage$view = function (_v0) {
+	return {
+		aI: A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$id('usage')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h1,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Usage')
+						])),
+					A2(
+					$elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Enter a number in a cell')
+								])),
+							A2(
+							$elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Enter an equation by starting with an \'=\'')
+								]))
+						])),
+					A2(
+					$elm$html$Html$p,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('negrita')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Examples:')
+						])),
+					A2(
+					$elm$html$Html$pre,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('=A1+A2'),
+							A2($elm$html$Html$br, _List_Nil, _List_Nil),
+							$elm$html$Html$text('=A1+79'),
+							A2($elm$html$Html$br, _List_Nil, _List_Nil),
+							$elm$html$Html$text('=A1+B2+C3+...')
+						])),
+					A2(
+					$elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('negrita')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Note: ')
+								])),
+							$elm$html$Html$text('Currently only \'+\' is supported in equations.'),
+							A2($elm$html$Html$br, _List_Nil, _List_Nil),
+							A2(
+							$elm$html$Html$span,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('negrita')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Note: ')
+								])),
+							$elm$html$Html$text('There must be no spaces between operands.')
+						]))
+				])),
+		ay: 'Usage'
+	};
+};
+var $author$project$Main$view = function (model) {
+	if (!model.$) {
+		var spreadSheetModel = model.a;
+		return A3(
+			$author$project$Main$mapView,
+			model,
+			$author$project$Main$GotSpreadSheetMsg,
+			$author$project$Pages$SpreadSheet$view(spreadSheetModel));
+	} else {
+		var usageModel = model.a;
+		return A3(
+			$author$project$Main$mapView,
+			model,
+			$author$project$Main$GotUsageMessage,
+			$author$project$Pages$Usage$view(usageModel));
+	}
+};
+var $author$project$Main$main = $elm$browser$Browser$application(
+	{
+		aP: $author$project$Main$init,
+		aT: $author$project$Main$UrlChanged,
+		aU: $author$project$Main$ClickedLink,
+		aZ: function (_v0) {
+			return $elm$core$Platform$Sub$none;
+		},
+		a_: $author$project$Main$update,
+		a$: $author$project$Main$view
+	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
