@@ -1,11 +1,11 @@
-module FooterView exposing (..)
+module Components.Footer exposing (..)
 
 import Html exposing (Html, a, div, footer, i, span, text)
 import Html.Attributes exposing (class, href)
 
 
-footerView : Html msg
-footerView =
+component : Html msg
+component =
     footer []
         [ div []
             [ text "Made with "

@@ -5,7 +5,6 @@ import Browser.Navigation exposing (Key)
 import CellPosition exposing (CellPosition)
 import Char
 import Dict exposing (Dict)
-import FooterView exposing (footerView)
 import Html exposing (Html, div, h1, input, table, td, text, th, tr)
 import Html.Attributes exposing (class, classList, id, type_, value)
 import Html.Events exposing (onFocus, onInput)
@@ -51,17 +50,15 @@ update msg model =
             ( { model | currentCell = Just cellPosition }, Cmd.none )
 
 
-view : Model -> Document Msg
+view : Model -> { title : String, content : Html Msg }
 view model =
     { title = "Elm SpreadSheet"
-    , body =
-        [ div [ id "spreadsheet" ]
+    , content =
+        div [ id "spreadsheet" ]
             [ h1 [] [ text "Elm SpreadSheet" ]
             , table []
                 ([ viewSpreadSheetHeader model.cols ] ++ viewSpreadSheetRows model)
-            , footerView
             ]
-        ]
     }
 
 
