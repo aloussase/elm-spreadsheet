@@ -1,4 +1,4 @@
-module Expr exposing (..)
+module SpreadSheet.Expr exposing (..)
 
 -- C1 + C2
 -- C1 + 12

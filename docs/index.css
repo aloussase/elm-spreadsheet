@@ -24,6 +24,8 @@ footer {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    align-items: center;
 }
 
 a {
@@ -35,6 +37,30 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#app-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#app-nav a {
+    padding: 0.3rem;
+    text-decoration: none;
+}
+
+#usage {
+    display: flex;
+    width: 100%;
+    height: 80vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.active {
+    text-decoration: underline !important;
 }
 
 .cell-error {
@@ -54,4 +80,8 @@ a {
 
 .fa-heart {
     color: red;
+}
+
+.negrita {
+    font-weight: bold;
 }

@@ -1,140 +1,125 @@
 module Main exposing (main)
 
-import Browser
-import Char
-import Dict exposing (Dict)
-import Eval
-import Expr
-import FooterView exposing (footerView)
-import Html exposing (Html, div, h1, input, table, td, text, th, tr)
-import Html.Attributes exposing (class, classList, id, type_, value)
-import Html.Events exposing (onFocus, onInput)
-import Maybe
-import Maybe.Extra as ME
-import Model exposing (..)
-import Msg exposing (..)
-import Parser_
+import Browser exposing (Document, UrlRequest(..))
+import Browser.Navigation as Nav
+import Components.Footer as Footer
+import Components.Navbar as Navbar
+import Html exposing (Html)
+import Pages.SpreadSheet as SpreadSheet
+import Pages.Usage as Usage
+import Route exposing (Route)
+import Url exposing (Url)
+
+
+type Model
+    = SpreadSheet SpreadSheet.Model
+    | Usage Usage.Model
+
+
+type Msg
+    = GotSpreadSheetMsg SpreadSheet.Msg
+    | GotUsageMessage ()
+    | ClickedLink UrlRequest
+    | UrlChanged Url
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
-        , update = update
+    Browser.application
+        { init = init
         , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        , onUrlRequest = ClickedLink
+        , onUrlChange = UrlChanged
         }
 
 
-update : Msg -> Model -> Model
+init : flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init _ url key =
+    ( SpreadSheet (SpreadSheet.init key), Cmd.none )
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        EditCell cellPosition input ->
-            { model | cells = Dict.insert cellPosition input model.cells }
+    case ( msg, model ) of
+        ( GotSpreadSheetMsg spreadSheetMsg, SpreadSheet spreadSheetModel ) ->
+            SpreadSheet.update spreadSheetMsg spreadSheetModel
+                |> mapUpdate SpreadSheet GotSpreadSheetMsg
 
-        FocusCell cellPosition ->
-            { model | currentCell = Just cellPosition }
-
-
-view : Model -> Html Msg
-view model =
-    div [ id "spreadsheet" ]
-        [ h1 [] [ text "Elm SpreadSheet" ]
-        , table []
-            ([ viewSpreadSheetHeader model.cols ] ++ viewSpreadSheetRows model)
-        , footerView
-        ]
-
-
-viewSpreadSheetRows : Model -> List (Html Msg)
-viewSpreadSheetRows model =
-    List.range 1 model.rows
-        |> List.map
-            (\row ->
-                tr []
-                    (List.range 0 model.cols
-                        |> List.map
-                            (\col ->
-                                viewSpreadSheetRow model row col
-                            )
+        ( ClickedLink urlRequest, _ ) ->
+            case urlRequest of
+                Internal url ->
+                    ( model
+                    , Nav.pushUrl (getNavKey model) (Url.toString url)
                     )
-            )
+
+                External url ->
+                    ( model
+                    , Nav.load url
+                    )
+
+        ( UrlChanged url, _ ) ->
+            case Route.parse url of
+                Just Route.Index ->
+                    ( SpreadSheet <| SpreadSheet.init (getNavKey model), Cmd.none )
+
+                Just Route.Usage ->
+                    ( Usage <| Usage.init (getNavKey model), Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
-viewSpreadSheetRow : Model -> Int -> Int -> Html Msg
-viewSpreadSheetRow model row col =
-    if col == 0 then
-        td [ class "row-number" ] [ text <| String.fromInt row ]
+view : Model -> Document Msg
+view model =
+    case model of
+        SpreadSheet spreadSheetModel ->
+            SpreadSheet.view spreadSheetModel
+                |> mapView model GotSpreadSheetMsg
 
-    else
-        let
-            cellPosition =
-                ( row, getLetterForColumn col )
-
-            cellContents =
-                Maybe.withDefault "" <| Dict.get cellPosition model.cells
-        in
-        viewCell model cellPosition cellContents
+        Usage usageModel ->
+            Usage.view usageModel
+                |> mapView model GotUsageMessage
 
 
-viewCell : Model -> CellPosition -> String -> Html Msg
-viewCell model cellPosition cellContents =
-    let
-        cellResult =
-            runCell model cellPosition cellContents
-    in
-    td []
-        [ input
-            [ type_ "text"
-            , value (cellResult |> Maybe.withDefault "#ERR")
-            , onInput (EditCell cellPosition)
-            , onFocus (FocusCell cellPosition)
-            , classList
-                [ ( "cell-error", ME.isNothing cellResult )
-                ]
-            ]
-            []
+mapUpdate : (model -> Model) -> (msg -> Msg) -> ( model, Cmd msg ) -> ( Model, Cmd Msg )
+mapUpdate toModel toMsg ( model, cmd ) =
+    ( toModel model, Cmd.map toMsg cmd )
+
+
+mapView : Model -> (msg -> Msg) -> { title : String, content : Html msg } -> Document Msg
+mapView model toMsg { title, content } =
+    { title = title
+    , body =
+        [ Navbar.component (isActive model)
+        , Html.map toMsg content
+        , Footer.component
         ]
+    }
 
 
-runCell : Model -> CellPosition -> String -> Maybe String
-runCell model cellPosition cellContents =
-    case model.currentCell of
-        Nothing ->
-            evalCellContents model.cells cellContents
+isActive : Model -> Route -> Bool
+isActive model route =
+    case ( model, route ) of
+        ( SpreadSheet _, Route.Index ) ->
+            True
 
-        Just currentCellPos ->
-            if currentCellPos == cellPosition then
-                Just cellContents
+        ( Usage _, Route.Usage ) ->
+            True
 
-            else
-                evalCellContents model.cells cellContents
-
-
-evalCellContents : Dict CellPosition String -> String -> Maybe String
-evalCellContents cells cellContents =
-    if String.isEmpty cellContents then
-        Just ""
-
-    else
-        Parser_.parse cellContents
-            |> Maybe.andThen (Eval.eval cells)
-            |> Maybe.map String.fromInt
+        _ ->
+            False
 
 
-viewSpreadSheetHeader : Int -> Html Msg
-viewSpreadSheetHeader cols =
-    tr [] (List.range 0 cols |> List.map viewSpreadSheetHeaderColumn)
+getNavKey : Model -> Nav.Key
+getNavKey model =
+    case model of
+        SpreadSheet spreadSheetModel ->
+            spreadSheetModel.key
 
-
-viewSpreadSheetHeaderColumn : Int -> Html Msg
-viewSpreadSheetHeaderColumn col =
-    if col == 0 then
-        th [] []
-
-    else
-        th [ class "column-header" ] [ text <| String.fromChar <| getLetterForColumn col ]
-
-
-getLetterForColumn : Int -> Char
-getLetterForColumn col =
-    Char.fromCode (col + 64)
+        Usage usageModel ->
+            usageModel.key
