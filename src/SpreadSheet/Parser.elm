@@ -1,11 +1,11 @@
-module Parser_ exposing (..)
+module SpreadSheet.Parser exposing (..)
 
 import Char
-import Expr exposing (..)
 import Maybe
 import Maybe.Extra as ME
 import Parser exposing ((|.), (|=), Parser)
 import Set
+import SpreadSheet.Expr exposing (..)
 import Tuple
 
 

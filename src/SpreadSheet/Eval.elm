@@ -1,9 +1,9 @@
-module Eval exposing (..)
+module SpreadSheet.Eval exposing (..)
 
+import CellPosition exposing (CellPosition)
 import Dict exposing (Dict)
-import Expr exposing (..)
-import Model exposing (CellPosition)
-import Parser_ exposing (parse)
+import SpreadSheet.Expr exposing (..)
+import SpreadSheet.Parser exposing (parse)
 
 
 eval : Dict CellPosition String -> Expr -> Maybe Int

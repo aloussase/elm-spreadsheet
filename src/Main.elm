@@ -1,140 +1,68 @@
 module Main exposing (main)
 
-import Browser
-import Char
-import Dict exposing (Dict)
-import Eval
-import Expr
-import FooterView exposing (footerView)
-import Html exposing (Html, div, h1, input, table, td, text, th, tr)
-import Html.Attributes exposing (class, classList, id, type_, value)
-import Html.Events exposing (onFocus, onInput)
-import Maybe
-import Maybe.Extra as ME
-import Model exposing (..)
-import Msg exposing (..)
-import Parser_
+import Browser exposing (Document, UrlRequest)
+import Browser.Navigation exposing (Key)
+import Html exposing (Html)
+import Pages.SpreadSheet as SpreadSheet
+import Url exposing (Url)
+
+
+type Model
+    = SpreadSheet SpreadSheet.Model
+
+
+type Msg
+    = GotSpreadSheetMsg SpreadSheet.Msg
+    | ClickedLink UrlRequest
+    | UrlChanged Url
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
-        , update = update
+    Browser.application
+        { init = init
         , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        , onUrlRequest = ClickedLink
+        , onUrlChange = UrlChanged
         }
 
 
-update : Msg -> Model -> Model
+init : flags -> Url -> Key -> ( Model, Cmd Msg )
+init _ url key =
+    ( SpreadSheet (SpreadSheet.init key), Cmd.none )
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        EditCell cellPosition input ->
-            { model | cells = Dict.insert cellPosition input model.cells }
+    case ( msg, model ) of
+        ( GotSpreadSheetMsg spreadSheetMsg, SpreadSheet spreadSheetModel ) ->
+            SpreadSheet.update spreadSheetMsg spreadSheetModel
+                |> mapUpdate SpreadSheet GotSpreadSheetMsg
 
-        FocusCell cellPosition ->
-            { model | currentCell = Just cellPosition }
+        ( ClickedLink urlRequest, _ ) ->
+            ( model, Cmd.none )
+
+        ( UrlChanged url, _ ) ->
+            ( model, Cmd.none )
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div [ id "spreadsheet" ]
-        [ h1 [] [ text "Elm SpreadSheet" ]
-        , table []
-            ([ viewSpreadSheetHeader model.cols ] ++ viewSpreadSheetRows model)
-        , footerView
-        ]
+    case model of
+        SpreadSheet spreadSheetModel ->
+            SpreadSheet.view spreadSheetModel
+                |> mapView GotSpreadSheetMsg
 
 
-viewSpreadSheetRows : Model -> List (Html Msg)
-viewSpreadSheetRows model =
-    List.range 1 model.rows
-        |> List.map
-            (\row ->
-                tr []
-                    (List.range 0 model.cols
-                        |> List.map
-                            (\col ->
-                                viewSpreadSheetRow model row col
-                            )
-                    )
-            )
+mapUpdate : (model -> Model) -> (msg -> Msg) -> ( model, Cmd msg ) -> ( Model, Cmd Msg )
+mapUpdate toModel toMsg ( model, cmd ) =
+    ( toModel model, Cmd.map toMsg cmd )
 
 
-viewSpreadSheetRow : Model -> Int -> Int -> Html Msg
-viewSpreadSheetRow model row col =
-    if col == 0 then
-        td [ class "row-number" ] [ text <| String.fromInt row ]
-
-    else
-        let
-            cellPosition =
-                ( row, getLetterForColumn col )
-
-            cellContents =
-                Maybe.withDefault "" <| Dict.get cellPosition model.cells
-        in
-        viewCell model cellPosition cellContents
-
-
-viewCell : Model -> CellPosition -> String -> Html Msg
-viewCell model cellPosition cellContents =
-    let
-        cellResult =
-            runCell model cellPosition cellContents
-    in
-    td []
-        [ input
-            [ type_ "text"
-            , value (cellResult |> Maybe.withDefault "#ERR")
-            , onInput (EditCell cellPosition)
-            , onFocus (FocusCell cellPosition)
-            , classList
-                [ ( "cell-error", ME.isNothing cellResult )
-                ]
-            ]
-            []
-        ]
-
-
-runCell : Model -> CellPosition -> String -> Maybe String
-runCell model cellPosition cellContents =
-    case model.currentCell of
-        Nothing ->
-            evalCellContents model.cells cellContents
-
-        Just currentCellPos ->
-            if currentCellPos == cellPosition then
-                Just cellContents
-
-            else
-                evalCellContents model.cells cellContents
-
-
-evalCellContents : Dict CellPosition String -> String -> Maybe String
-evalCellContents cells cellContents =
-    if String.isEmpty cellContents then
-        Just ""
-
-    else
-        Parser_.parse cellContents
-            |> Maybe.andThen (Eval.eval cells)
-            |> Maybe.map String.fromInt
-
-
-viewSpreadSheetHeader : Int -> Html Msg
-viewSpreadSheetHeader cols =
-    tr [] (List.range 0 cols |> List.map viewSpreadSheetHeaderColumn)
-
-
-viewSpreadSheetHeaderColumn : Int -> Html Msg
-viewSpreadSheetHeaderColumn col =
-    if col == 0 then
-        th [] []
-
-    else
-        th [ class "column-header" ] [ text <| String.fromChar <| getLetterForColumn col ]
-
-
-getLetterForColumn : Int -> Char
-getLetterForColumn col =
-    Char.fromCode (col + 64)
+mapView : (msg -> Msg) -> { title : String, body : List (Html msg) } -> Document Msg
+mapView toMsg { title, body } =
+    { title = title
+    , body = List.map (Html.map toMsg) body
+    }
